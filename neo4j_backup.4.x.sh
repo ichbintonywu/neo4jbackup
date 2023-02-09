@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 CONTAINER_NAME=$1
 DATABASE_NAME=$2
+BACKUP_PATH=/data/databases/backups
+ALL_BACKUP_PATH=/data/databases
 
 if [ -z $CONTAINER_NAME ]
 then
@@ -17,21 +19,29 @@ fi
 # Set bash to exit if any further command fails
 set -e
 set -o pipefail
-
-FILE_NAME=$(date +%Y-%m-%d_%H:%M:%S.$DATABASE_NAME)
-
+#generate a time stamp for file name
+FILE_NAME=$(date +%Y-%m-%dT%H-%M-%S.$DATABASE_NAME)
+ALL_BACKUPNAME=$(date +%Y-%m-%dT%H-%M-%S.allDBs)
+#create a folder for backup
 mkdir -p "./backups"
 
 echo "Backing up database '$DATABASE_NAME' from container '$CONTAINER_NAME'..."
 
-docker exec -it "$CONTAINER_NAME"  bin/neo4j-admin backup --backup-dir=data/dumps/ --database=$DATABASE_NAME
-docker exec -it "$CONTAINER_NAME"  tar czf data/dumps/$FILE_NAME.tar.gz data/dumps/$DATABASE_NAME
-
-echo ""
-echo "Exporting file from container..."
-
+#echo ""
+#echo "Exporting file from container..."
+ALL_DB="all"
 # Copy the created file out of the container to the host filesystem
-docker cp $CONTAINER_NAME:data/dumps/$FILE_NAME.tar.gz ./backups/$FILE_NAME.tar.gz
+if [ "$DATABASE_NAME" == "$ALL_DB" ]; then
+  echo "Back up all databases"
+  docker exec -it "$CONTAINER_NAME"  bin/neo4j-admin backup --backup-dir=$BACKUP_PATH --database=*
+  docker exec -it "$CONTAINER_NAME" tar czf $ALL_BACKUP_PATH/$ALL_BACKUPNAME.tar.gz --absolute-names $BACKUP_PATH
+  docker cp $CONTAINER_NAME:$ALL_BACKUP_PATH/$ALL_BACKUPNAME.tar.gz ./backups/$ALL_BACKUPNAME.tar.gz
+else
+  echo "Back up database - $DATABASE_NAME"
+  docker exec -it "$CONTAINER_NAME"  bin/neo4j-admin backup --backup-dir=$BACKUP_PATH --database=$DATABASE_NAME
+  docker exec -it "$CONTAINER_NAME"  tar czf $BACKUP_PATH/$FILE_NAME.tar.gz --absolute-names $BACKUP_PATH/$DATABASE_NAME
+  docker cp $CONTAINER_NAME:$BACKUP_PATH/$FILE_NAME.tar.gz ./backups/$FILE_NAME.tar.gz
+fi
 
 echo "Backed up database '$DATABASE_NAME' to ./backups/$FILE_NAME"
 echo "Done!"
