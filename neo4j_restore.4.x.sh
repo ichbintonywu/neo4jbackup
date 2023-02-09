@@ -43,14 +43,14 @@ set -e
 set -o pipefail
 
 docker cp ./$TARBALL_NAME $CONTAINER_NAME:$BACKUP_FOLDER
-docker exec -it "$CONTAINER_NAME" /bin/sh -c "mkdir -p $BACKUP_FOLDER/$DATABASE_NAME;rm -rf $BACKUP_FOLDER/$DATABASE_NAME/*;tar xf $BACKUP_FOLDER/$TARBALL_NAME --directory $BACKUP_FOLDER/$DATABASE_NAME;mv $BACKUP_FOLDER/$DATABASE_NAME/$ORIGINAL_DB_NAME/* $BACKUP_FOLDER/$DATABASE_NAME"
+docker exec -it "$CONTAINER_NAME" /bin/sh -c "mkdir -p $BACKUP_FOLDER/$DATABASE_NAME;rm -rf $BACKUP_FOLDER/$DATABASE_NAME/*;tar xf $BACKUP_FOLDER/$TARBALL_NAME --directory $BACKUP_FOLDER/$DATABASE_NAME;mv $BACKUP_FOLDER/$DATABASE_NAME$BACKUP_FOLDER/$ORIGINAL_DB_NAME/* $BACKUP_FOLDER/$DATABASE_NAME"
 
 echo ""
 echo "Restoring database '$DATABASE_NAME' in the container '$CONTAINER_NAME'..."
 
 eval=`docker exec -it $CONTAINER_NAME cypher-shell -u $USER_NAME -p $PASSWORD -d system "SHOW DATABASE $DATABASE_NAME YIELD name"`
 echo "$eval"
-echo "The target db name is $DATABASE_NAME"
+echo "The target DB name is: $DATABASE_NAME"
 
 if [[ $eval == *"$DATABASE_NAME"* ]] || [ "$DATABASE_NAME" == "$ORIGINAL_DB_NAME" ]; then
     echo "Restore to the existing database and is stopping the DB"
