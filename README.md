@@ -24,7 +24,7 @@ Go to the backup folder
 
 ../neo4j_restore.4.x.sh neo4j 2023-02-08T12-56-10.testdb.tar.gz testdb
 
-### (ver 5) to restore the db neo4j from a backup file, neo4j5 is the container name
+### (ver 5) to restore the db neo4j from a backup file, and neo4j5 is the container name
 Go to the backup folder
 
 ../neo4j_restore.5.x.sh neo4j5 neo4j-2023-02-09T12-00-26.backup neo4j
