@@ -15,13 +15,16 @@ Samples to run the scripts. They are tested on Neo4j v4.4.7 and v5.4.0 docker im
 
 ### to restore a db from  a tar file which is the backup of db - testdb to the new database testdb2 in the container neo4j. 
 Go to the backup folder
+
 ../neo4j_restore.4.x.sh neo4j 2023-02-08T12-56-10.testdb.tar.gz testdb2
 
 
 ### to restore a db from a tar file which is the backup of db - testdb to override the existing database - testdb in the container neo4j
 Go to the backup folder
+
 ../neo4j_restore.4.x.sh neo4j 2023-02-08T12-56-10.testdb.tar.gz testdb
 
 ### ver 5 to restore the db neo4j from a backup file
 Go to the backup folder
+
 ../restore5-1.sh neo4j5 neo4j-2023-02-09T12-00-26.backup neo4j
