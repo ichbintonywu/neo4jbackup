@@ -3,9 +3,9 @@
 ## Backup script for running Neo4j
 
 
-Sample script to jump into docker to run online backup and pull back to local directory ./backup, and restore a database from the backup tar file.
+Sample script to jump into docker to run online backup and pull back to local directory ./backup, and restore a database from the backup tar file. 
 
-Samples to run the scripts
+Samples to run the scripts. They are tested on Neo4j v4.4.7 and v5.4.0 docker image.
 
 ### to backup database testdb in the container neo4j
 ./neo4j_backup.4.x.sh neo4j testdb 
