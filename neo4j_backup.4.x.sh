@@ -24,6 +24,7 @@ FILE_NAME=$(date +%Y-%m-%dT%H-%M-%S.$DATABASE_NAME)
 ALL_BACKUPNAME=$(date +%Y-%m-%dT%H-%M-%S.allDBs)
 #create a folder for backup
 mkdir -p "./backups"
+docker exec -it "$CONTAINER_NAME"  mkdir -p $BACKUP_PATH
 
 echo "Backing up database '$DATABASE_NAME' from container '$CONTAINER_NAME'..."
 
